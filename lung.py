@@ -1,17 +1,28 @@
 import numpy as np
-from matplotlib import pylab as plt
+#from matplotlib import pylab as plt
+
 # this part is just for bypassing the authorization
 # of installing new python package in lab machine
-#import sys
-#sys.path.append("/u/c/h/chih-ching/Theano")
+import sys
+sys.path.append("/u/c/h/chih-ching/Theano")
 
 import theano
-A = np.fromfile("JPCLN138.IMG", dtype='int16', sep="")
 
-#with open('JPCLN138.IMG', 'rb') as f:
-#  data = f.read(16)
-#  text = data.decode('hex')
-#  print text
-A = A.reshape([2048, 2048])
-plt.imshow(A)
-plt.show()
+def readimg(prestr, minNum, maxNum):
+  filename = prestr
+  out = []
+  for i in range(minNum, maxNum):
+    name = filename + str(maxNum).zfill(3) + ".IMG"
+    A = np.fromfile(name, dtype='int16', sep="")
+	A = A.reshape([2048, 2048])
+    out.append(A)
+
+  return out
+
+def main():
+  # if read everything at once, might run out of memory?
+  nodule_img = readimg("JPCLN", 1, 154)
+  non_nodule_img = readimg("JPCNN", 1, 93)
+
+if __name__ == '__main__':
+  main()
