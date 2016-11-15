@@ -1,12 +1,58 @@
 import numpy as np
 
-#from matplotlib import pylab as plt
+from matplotlib import pylab as plt
 
 # this part is just for bypassing the authorization
 # of installing new python package in lab machine
 import sys
 sys.path.append("/u/c/h/chih-ching/Theano")
 import theano
+
+sys.path.append("/u/c/h/chih-ching/keras-master")
+import keras
+sys.path.append("/u/c/h/chih-ching/deep-learning-models-master")
+from resnet50 import ResNet50
+sys.path.append("/u/c/h/chih-ching/h5py-master/h5py")
+import h5py
+from keras.preprocessing import image
+from imagenet_utils import preprocess_input, decode_predictions
+
+def readimg(prestr, minNum, maxNum):
+  filename = prestr
+  out = []
+  for i in range(minNum, maxNum):
+    name = filename + str(maxNum).zfill(3) + ".IMG"
+    A = np.fromfile(name, dtype='int16', sep="")
+    A = A.reshape([2048, 2048])
+    out.append(A)
+
+  return out
+
+def main():
+  # if read everything at once, might run out of memory?
+  #nodule_img = readimg("JPCLN", 0, 154)
+  #non_nodule_img = readimg("JPCNN", 0, 93)
+  model = ResNet50(weights='imagenet')
+  nodule_img = readimg("JPCLN",137,138)
+  #plt.imshow(nodule_img[0],cmap='Greys_r')
+  #plt.show()
+  #print (nodule_img)
+  #print ("test")
+  #img_path = 'elephant.jpg'
+  #img = image.load_img(img_path, target_size=(224, 224))
+  img = nodule_img[0]
+  x = image.img_to_array(img)
+  x = np.expand_dims(x, axis=0)
+  x = preprocess_input(x)
+
+  preds = model.predict(x)
+  print('Predicted:', decode_predictions(preds))
+
+if __name__ == '__main__':
+  main()
+
+# ------------------UNUSED PART BELOW----------------------------
+
 '''
 sys.path.append("/u/c/h/chih-ching/Lasagne-master")
 import lasagne
@@ -23,29 +69,6 @@ sys.path.append("/u/c/h/chih-ching/caffe-theano-conversion-master/caffe2theano")
 from conversion import convert
 from models import *
 '''
-sys.path.append("/u/c/h/chih-ching/keras-master")
-import keras
-sys.path.append("/u/c/h/chih-ching/deep-learning-models-master")
-from resnet50 import ResNet50
-def readimg(prestr, minNum, maxNum):
-  filename = prestr
-  out = []
-  for i in range(minNum, maxNum):
-    name = filename + str(maxNum).zfill(3) + ".IMG"
-    A = np.fromfile(name, dtype='int16', sep="")
-    A = A.reshape([2048, 2048])
-    out.append(A)
-
-  return out
-
-def main():
-  # if read everything at once, might run out of memory?
-  #nodule_img = readimg("JPCLN", 1, 154)
-  #non_nodule_img = readimg("JPCNN", 1, 93)
-  print ("test")
-
-if __name__ == '__main__':
-  main()
 
 '''
 # I hate dependency and being unable to have authorization to install package on lab machine!!!
