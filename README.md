@@ -9,6 +9,10 @@ CS767 Final Project
 
 1. http://deeplearning.net/tutorial/lenet.html
 2. http://deeplearning.net/software/theano/
-3. https://code.google.com/archive/p/neurolab/
-4. https://www.tensorflow.org/
-5. https://github.com/kitofans/caffe-theano-conversion
+3. https://github.com/fchollet/keras
+4. https://github.com/fchollet/deep-learning-models
+
+
+5. https://code.google.com/archive/p/neurolab/
+6. https://www.tensorflow.org/
+7. https://github.com/kitofans/caffe-theano-conversion
