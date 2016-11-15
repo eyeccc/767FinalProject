@@ -12,7 +12,7 @@ CS767 Final Project
 3. https://github.com/fchollet/keras
 4. https://github.com/fchollet/deep-learning-models
 
-
-5. https://code.google.com/archive/p/neurolab/
-6. https://www.tensorflow.org/
-7. https://github.com/kitofans/caffe-theano-conversion
+#### might not be used
+1. https://code.google.com/archive/p/neurolab/
+2. https://www.tensorflow.org/
+3. https://github.com/kitofans/caffe-theano-conversion
