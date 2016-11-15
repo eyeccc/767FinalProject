@@ -7,7 +7,8 @@ CS767 Final Project
 
 ## Dependency (Deep Learning Python Library)
 
-http://deeplearning.net/tutorial/lenet.html
-http://deeplearning.net/software/theano/
-https://code.google.com/archive/p/neurolab/
-https://www.tensorflow.org/
+1. http://deeplearning.net/tutorial/lenet.html
+2. http://deeplearning.net/software/theano/
+3. https://code.google.com/archive/p/neurolab/
+4. https://www.tensorflow.org/
+5. https://github.com/kitofans/caffe-theano-conversion
