@@ -1,18 +1,19 @@
 import numpy as np
 
 from matplotlib import pylab as plt
-
+#from scipy.misc import imread, imresize, imsave
 # this part is just for bypassing the authorization
 # of installing new python package in lab machine
 import sys
-sys.path.append("/u/c/h/chih-ching/Theano")
+#sys.path.append("/u/c/h/chih-ching/Theano")
 import theano
-
-sys.path.append("/u/c/h/chih-ching/keras-master")
+import tensorflow
+#sys.path.append("/u/c/h/chih-ching/keras-master")
 import keras
-sys.path.append("/u/c/h/chih-ching/deep-learning-models-master")
+#sys.path.append("/u/c/h/chih-ching/deep-learning-models-master")
+sys.path.append("/Users/waster/deep-learning-models")
 from resnet50 import ResNet50
-sys.path.append("/u/c/h/chih-ching/h5py-master/h5py")
+#sys.path.append("/u/c/h/chih-ching/h5py-master/h5py")
 import h5py
 from keras.preprocessing import image
 from imagenet_utils import preprocess_input, decode_predictions
@@ -23,8 +24,11 @@ def readimg(prestr, minNum, maxNum):
   for i in range(minNum, maxNum):
     name = filename + str(maxNum).zfill(3) + ".IMG"
     A = np.fromfile(name, dtype='int16', sep="")
-    A = A.reshape([2048, 2048])
-    out.append(A)
+    #A = A.reshape([2048, 2048])
+    A = np.resize(A,[224,224])
+    B = np.repeat(A[:,:,np.newaxis],3,axis=2)
+    #A = A.reshape([1,3,1182,1182])
+    out.append(B)
 
   return out
 
@@ -41,7 +45,9 @@ def main():
   #img_path = 'elephant.jpg'
   #img = image.load_img(img_path, target_size=(224, 224))
   img = nodule_img[0]
+  print(img.shape)
   x = image.img_to_array(img)
+  print(x.shape)
   x = np.expand_dims(x, axis=0)
   x = preprocess_input(x)
 
