@@ -17,7 +17,8 @@ from resnet50 import ResNet50
 import h5py
 from keras.preprocessing import image
 from imagenet_utils import preprocess_input, decode_predictions
-
+# path for images 
+# /Users/waster/Downloads/All247images
 def readimg(prestr, minNum, maxNum):
   filename = prestr
   out = []
