@@ -13,6 +13,8 @@ import keras
 #sys.path.append("/u/c/h/chih-ching/deep-learning-models-master")
 sys.path.append("/Users/waster/deep-learning-models")
 from resnet50 import ResNet50
+from keras.layers.core import Activation
+from keras import backend as K
 #sys.path.append("/u/c/h/chih-ching/h5py-master/h5py")
 import h5py
 from keras.preprocessing import image
@@ -32,6 +34,10 @@ def readimg(prestr, minNum, maxNum):
     out.append(B)
 
   return out
+def get_activations(model, layer_idx, X_batch):
+  get_activations = K.function([model.layers[0].input, K.learning_phase()], [model.layers[layer_idx].output,])
+  activations = get_activations([X_batch,0])
+  return activations
 
 def main():
   # if read everything at once, might run out of memory?
@@ -51,7 +57,17 @@ def main():
   print(x.shape)
   x = np.expand_dims(x, axis=0)
   x = preprocess_input(x)
-
+  #print(model.layers[3].__dict__)
+  convout1 = Activation('relu')
+  feat = get_activations(model, 4, x)
+#theano.function([model.layers[0].input], convout1.get_output(train=False), allow_input_downcast=False)
+#feat = get_feature(x)
+#plt.imshow(feat)
+  print(len(feat))
+  print(len(feat[0]))
+  print(len(feat[0][0]))
+  print(len(feat[0][0][0]))
+  print(len(feat[0][0][0][0]))
   preds = model.predict(x)
   print('Predicted:', decode_predictions(preds))
 
