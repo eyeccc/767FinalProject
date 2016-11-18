@@ -30,3 +30,6 @@ pool1, res2c, res3d, res4f, and pool5
  1.1 http://blog.christianperone.com/tag/feature-extraction/
 2. Visualize feature extracted from hidden layer: https://github.com/fchollet/keras/issues/431#issuecomment-124175958
 3. Object localization using Keras: https://blog.heuritech.com/2016/04/26/pre-trained-convnets-and-object-localisation-in-keras/
+
+## Disclaimer
+I used my friends laptop for part of the implementation and forgot to change git config file. Thus, it will show other contributor, but it's actually me...
