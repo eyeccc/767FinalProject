@@ -35,6 +35,7 @@ def readimg(prestr, minNum, maxNum):
 
   return out
 def get_activations(model, layer_idx, X_batch):
+#  print(model.layers[layer_idx].get_config())
   get_activations = K.function([model.layers[0].input, K.learning_phase()], [model.layers[layer_idx].output,])
   activations = get_activations([X_batch,0])
   return activations
@@ -52,24 +53,32 @@ def main():
   #img_path = 'elephant.jpg'
   #img = image.load_img(img_path, target_size=(224, 224))
   img = nodule_img[0]
-  print(img.shape)
+# print(img.shape)
   x = image.img_to_array(img)
-  print(x.shape)
+#print(x.shape)
   x = np.expand_dims(x, axis=0)
   x = preprocess_input(x)
   #print(model.layers[3].__dict__)
-  convout1 = Activation('relu')
-  feat = get_activations(model, 4, x)
+  layer_list = [5,31,34,70,73,132,135,174]
+  all_feat = []
+  feature_list = []
+  feat = []
+  for i in range(0, len(layer_list)):
+    feat = get_activations(model, 5, x)
+    feature_list.append(feat)
+  all_feat.append(feature_list)
+  
 #theano.function([model.layers[0].input], convout1.get_output(train=False), allow_input_downcast=False)
 #feat = get_feature(x)
 #plt.imshow(feat)
+# max: four dim array
   print(len(feat))
   print(len(feat[0]))
   print(len(feat[0][0]))
   print(len(feat[0][0][0]))
   print(len(feat[0][0][0][0]))
-  preds = model.predict(x)
-  print('Predicted:', decode_predictions(preds))
+#preds = model.predict(x)
+# print('Predicted:', decode_predictions(preds))
 
 if __name__ == '__main__':
   main()
