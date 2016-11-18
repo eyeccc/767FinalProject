@@ -22,6 +22,9 @@ ResNet: http://ethereon.github.io/netscope/#/gist/db945b393d40bfa26006
 
 (Get from: https://github.com/fchollet/deep-learning-models/blob/master/resnet50.py)
 
+### layers
+pool1, res2c, res3d, res4f, and pool5
+
 ## Issue I faced
 1. How to get hidden layer feature: https://github.com/fchollet/keras/issues/3166
  1.1 http://blog.christianperone.com/tag/feature-extraction/
