@@ -4,6 +4,9 @@ import sys
 import theano
 import tensorflow
 import keras
+from PIL import Image
+from scipy.misc import imread, imresize, imsave
+#import cv2
 # just to locate the resnet file in local machine
 sys.path.append("/Users/waster/deep-learning-models")
 from resnet50 import ResNet50
@@ -29,11 +32,14 @@ def getFeatures(path, prestr, idx, model):
 def readimg(prestr, idx):
   filename = prestr
   name = filename + str(idx).zfill(3) + ".IMG"
+
   A = np.fromfile(name, dtype='int16', sep="")
-    #A = A.reshape([2048, 2048])
-  A = np.resize(A,[224,224])
-  B = np.repeat(A[:,:,np.newaxis],3,axis=2)
-    #A = A.reshape([1,3,1182,1182])
+  A = A.reshape([2048,2048])
+
+  B = Image.fromarray(A)
+  B = imresize(B,[224,224])
+  B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+
   return B
 
 def get_activations(model, layer_idx, X_batch):
@@ -51,16 +57,25 @@ def main():
   pos_feat = []
   path = "/Users/waster/Downloads/All247images/"
   prestr = "JPCLN"
+  
   for i in range(1,10):
     f = getFeatures(path, prestr, i, model)
     pos_feat.append(f)
-
+  tp = np.asarray(f[0])
+  print(tp.shape)
+  test = np.transpose(tp,(2,3,4,0,1))
+  print(test.shape)
+  test = np.squeeze(test)
+  print(test.shape)
+  plt.imshow(test)
+  plt.show()
+'''
   neg_feat = []
   prestr = "JPCNN"
   for i in range(1,10):
     f = getFeatures(path, prestr, i, model)
     neg_feat.append(f)
-
+'''
 #preds = model.predict(x)
 # print('Predicted:', decode_predictions(preds))
 
