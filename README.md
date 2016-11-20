@@ -27,7 +27,7 @@ pool1, res2c, res3d, res4f, and pool5
 
 ## Issue I faced
 1. How to get hidden layer feature: https://github.com/fchollet/keras/issues/3166
-   1.1 http://blog.christianperone.com/tag/feature-extraction/
+   1. http://blog.christianperone.com/tag/feature-extraction/
 2. Visualize feature extracted from hidden layer: https://github.com/fchollet/keras/issues/431#issuecomment-124175958
 3. Object localization using Keras: https://blog.heuritech.com/2016/04/26/pre-trained-convnets-and-object-localisation-in-keras/
 
@@ -36,12 +36,10 @@ The doctor will look at the X-ray to evaluate the size and shape of the nodule, 
 
 ## Method or Algo
 1. classify nodule vs non-nodule
-   1.1 using cnn
-   1.2 slice picture to 20 mm suqare, do something on those squares
-2. detect position
-   same as 1.
-3. classify benign vs malicious
-   given position, crop the nodule area, do classification on sub-image
+   1. using cnn
+   2. slice picture to 20 mm suqare, do something on those squares
+2. detect position, same as 1.
+3. classify benign vs malicious, given position, crop the nodule area, do classification on sub-image
 
 ## Source
 1. https://www.cs.tau.ac.il/~wolf/papers/SPIE15chest.pdf
