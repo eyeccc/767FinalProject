@@ -31,6 +31,12 @@ pool1, res2c, res3d, res4f, and pool5
 2. Visualize feature extracted from hidden layer: https://github.com/fchollet/keras/issues/431#issuecomment-124175958
 3. Object localization using Keras: https://blog.heuritech.com/2016/04/26/pre-trained-convnets-and-object-localisation-in-keras/
 
+## Preprocessing
+1. Image Registration (rotation to make every figure be at the same angle)
+2. Remove bone shadow?
+3. data augmentation
+
+
 ## More Info about Lung Nodule
 The doctor will look at the X-ray to evaluate the size and shape of the nodule, its location, and its general appearance. Single pulmonary nodules seen on chest x-rays are generally at least 8 to 10 millimeters in diameter. If they are smaller than that, they are unlikely to be visible on a chest X-ray. The larger the nodule is, and the more irregularly shaped it is, the more likely it is to be cancerous. Those located in the upper portions of the lung are also more likely to be cancerous.
 
