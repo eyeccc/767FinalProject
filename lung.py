@@ -13,6 +13,7 @@ from keras.layers.core import Activation
 from keras import backend as K
 import h5py
 from keras.preprocessing import image
+from keras.models import Model
 from imagenet_utils import preprocess_input, decode_predictions
 # path for images 
 # /Users/waster/Downloads/All247images
@@ -21,13 +22,15 @@ def getFeatures(path, prestr, idx, model):
   x = image.img_to_array(img)
   x = np.expand_dims(x, axis=0)
   x = preprocess_input(x)
-  i = 174 # best layer for feature extraction
+#i = 174 # best layer for feature extraction
+#i = 5
   # option 1, extract feature from layer 174
-  feat = get_activations(model, i, x)
+ #feat = get_activations(model, i, x)
   
   # option 2, extract feature from final result
-  # feat = model.predict(x)
-  
+  feat = model.predict(x)
+#test = np.asarray(feat)
+#print(test.shape)
   return feat
   # option 3, use all feature maps
   '''
@@ -48,14 +51,12 @@ def readimg(prestr, idx):
 
   B = Image.fromarray(A)
   
-  # testing to see the marked nodule
-  plt.imshow(B)
-  plt.plot([1634],[692],'r*')
-  plt.show()
-  
+# B = imresize(B,[2048,2048])
   B = imresize(B,[224,224])
   B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-
+#plt.imshow(B)
+#  plt.plot([1634],[692],"r*")
+#  plt.show()
   return B
 
 def get_activations(model, layer_idx, X_batch):
@@ -67,25 +68,25 @@ def main():
   # if read everything at once, might run out of memory?
   #nodule_img = readimg("JPCLN", 0, 154)
   #non_nodule_img = readimg("JPCNN", 0, 93)
-  model = ResNet50(weights='imagenet')
-
+  base_model = ResNet50(weights='imagenet')
+  model = Model(input=base_model.input, output=base_model.get_layer('avg_pool').output)
   pos_feat = []
   path = "/Users/waster/Downloads/All247images/"
   prestr = "JPCLN"
-  test = readimg(path+prestr, 1)
+  test = getFeatures(path, prestr, 9, model)
   '''
   for i in range(1,10):
     f = getFeatures(path, prestr, i, model)
-    pos_feat.append(f)
-  tp = np.asarray(pos_feat[0])
+    pos_feat.append(f)'''
+  tp = np.asarray(test)
   print(tp.shape)
-  test = np.transpose(tp,(2,3,4,0,1))
-  print(test.shape)
-  test = np.squeeze(test)
-  print(test.shape)
-  plt.imshow(test)
-  plt.show()
-  '''
+#t = np.transpose(tp,(2,3,4,0,1))
+# print(t.shape)
+# t = np.squeeze(t)
+# print(t.shape)
+# plt.imshow(t)
+# plt.show()
+  
 '''
   neg_feat = []
   prestr = "JPCNN"
