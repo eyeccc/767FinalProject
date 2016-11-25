@@ -32,9 +32,11 @@ pool1, res2c, res3d, res4f, and pool5
 3. Object localization using Keras: https://blog.heuritech.com/2016/04/26/pre-trained-convnets-and-object-localisation-in-keras/
 
 ## Preprocessing
-1. Image Registration (rotation to make every figure be at the same angle)
-2. Remove bone shadow?
-3. data augmentation
+1. Image Registration (rotation to make every figure be at the same angle): https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
+2. Remove bone shadow: https://www.mit.bme.hu/node/9150
+3. data augmentation: 
+   1. http://machinelearningmastery.com/image-augmentation-deep-learning-keras/
+   2. http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html
 
 
 ## More Info about Lung Nodule
