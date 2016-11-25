@@ -18,6 +18,7 @@ from keras.models import Model
 from imagenet_utils import preprocess_input, decode_predictions
 # path for images 
 # /Users/waster/Downloads/All247images
+# /Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19
 def getFeatures(path, prestr, idx, model):
   img = readimg(path + prestr, idx)
   x = image.img_to_array(img)
