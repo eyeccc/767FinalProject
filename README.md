@@ -33,7 +33,7 @@ pool1, res2c, res3d, res4f, and pool5
 
 ## Preprocessing
 1. Image Registration (rotation to make every figure be at the same angle)
-2. Remove bone shadow?
+2. Remove bone shadow: https://www.mit.bme.hu/node/9150
 3. data augmentation
 
 
