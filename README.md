@@ -53,6 +53,7 @@ The doctor will look at the X-ray to evaluate the size and shape of the nodule, 
 ## Source
 1. https://www.cs.tau.ac.il/~wolf/papers/SPIE15chest.pdf
 2. http://my.clevelandclinic.org/health/diseases_conditions/hic_Pulmonary_Nodules
+3. http://cis-linux1.temple.edu/~wangp/5603-AI/Project/2016S/Transfer_ImageNet.pdf
 
 ## Disclaimer
 I used my friends laptop for part of the implementation and forgot to change git config file. Thus, it will show other contributor, but it's actually me...
