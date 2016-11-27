@@ -34,7 +34,7 @@ pool1, res2c, res3d, res4f, and pool5
 ## Preprocessing
 1. Image Registration (rotation to make every figure be at the same angle): https://www.learnopencv.com/image-alignment-ecc-in-opencv-c-python/
 2. Remove bone shadow: https://www.mit.bme.hu/node/9150
-3. data augmentation: 
+3. data augmentation: Resize each image from 2048x2048 to 256x256 then random cropping to 224x224 to fit the model
    1. http://machinelearningmastery.com/image-augmentation-deep-learning-keras/
    2. http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html
    3. https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
