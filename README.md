@@ -37,6 +37,7 @@ pool1, res2c, res3d, res4f, and pool5
 3. data augmentation: 
    1. http://machinelearningmastery.com/image-augmentation-deep-learning-keras/
    2. http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html
+   3. https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 
 
 ## More Info about Lung Nodule
