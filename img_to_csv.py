@@ -68,15 +68,23 @@ def main():
   path = "/Users/waster/Downloads/All247images/"
   path2 = "/Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19/"
   prestr = "JPCLN"
-  im = readimg(path+prestr,1)
-  kp = sift_feat(im)
+#im = readimg(path+prestr,1)
+# kp = sift_feat(im)
 # print(np.asarray(kp).shape)
-  im = readimg(path+prestr,2)
-  kp = sift_feat(im)
+# im = readimg(path+prestr,2)
+# kp = sift_feat(im)
 #print(np.asarray(kp).shape)
-  ttt = readpng(path2+prestr,1)
-  u = getFeatures(ttt, model)
-'''  
+  p_feat_png = []
+  for i in range(1,154+1):
+    img = readpng(path2+prestr,i)
+    f = getFeatures(img, model)
+    tp = np.asarray(f)
+    tp = np.squeeze(tp)
+    p_feat_png.append(tp)
+  a = np.asarray(p_feat_png)
+  np.savetxt("pos_png_feat.csv", a, delimiter=",")
+
+  '''  
   for i in range(1,154+1):
     img = readimg(path+prestr,i)
     f = getFeatures(img, model)
@@ -86,9 +94,10 @@ def main():
 
   a = np.asarray(pos_feat)
   np.savetxt("pos_feat.csv", a, delimiter=",")
-
+  '''
   neg_feat = []
   prestr = "JPCNN"
+  '''
   for i in range(1,93+1):
     img = readimg(path+prestr, i)
     f = getFeatures(img, model)
@@ -97,7 +106,16 @@ def main():
     neg_feat.append(tp)
   a = np.asarray(neg_feat)
   np.savetxt("neg_feat.csv", a, delimiter=",")
-'''
+  '''
+  n_feat_png = []
+  for i in range(1,93+1):
+    img = readpng(path2+prestr, i)
+    f = getFeatures(img, model)
+    tp = np.asarray(f)
+    tp = np.squeeze(tp)
+    n_feat_png.append(tp)
+  a = np.asarray(n_feat_png)
+  np.savetxt("neg_feat_png.csv",a,delimiter=",")
 
 if __name__ == '__main__':
   main()
