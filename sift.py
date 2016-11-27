@@ -22,7 +22,7 @@ def process_image(imagename, resultname):
     
     os.system(cmmd)
     print 'processed', imagename
-    
+     
 def read_features_from_file(filename):
     """ read feature properties and return in matrix form"""
     
