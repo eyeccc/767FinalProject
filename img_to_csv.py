@@ -7,6 +7,7 @@ from PIL import Image
 from scipy.misc import imread, imresize, imsave
 import csv
 import cv2
+import random
 # just to locate the resnet file in local machine
 sys.path.append("/Users/waster/deep-learning-models")
 from resnet50 import ResNet50
@@ -29,7 +30,7 @@ def getFeatures(img,  model):
 
   return feat
 
-def readimg(prestr, idx): # for binary image
+def readimg(prestr, idx, r): # for binary image
   filename = prestr
   name = filename + str(idx).zfill(3) + ".IMG"
 
@@ -37,15 +38,21 @@ def readimg(prestr, idx): # for binary image
   A = A.reshape([2048,2048])
 
   B = Image.fromarray(A)
-  B = imresize(B,[224,224])
+#B = imresize(B,[256,256])
+  B = B.resize((256,256), Image.ANTIALIAS)
+  B = B.crop((r,r,r+223,r+223))
+  B = np.asarray(B)
   B = np.repeat(B[:,:,np.newaxis],3,axis=2)
 
   return B
-def readpng(prestr, idx):
+def readpng(prestr, idx, r):
   filename = prestr
   name = filename + str(idx).zfill(3) + ".png"
   A = Image.open(name)
-  B = imresize(A,[224,224])
+  B = A.resize((256,256), Image.ANTIALIAS)
+#  B = imresize(A,[224,224])
+  B = B.crop((r,r,r+223,r+223))
+  B = np.asarray(B)
   B = np.repeat(B[:,:,np.newaxis],3,axis=2)
   return B
 
@@ -68,29 +75,34 @@ def main():
   path = "/Users/waster/Downloads/All247images/"
   path2 = "/Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19/"
   prestr = "JPCLN"
-#im = readimg(path+prestr,1)
+  im = readimg(path+prestr,1)
 # kp = sift_feat(im)
 # print(np.asarray(kp).shape)
 # im = readimg(path+prestr,2)
 # kp = sift_feat(im)
 #print(np.asarray(kp).shape)
+#  rr = random.randint(0,31)
   p_feat_png = []
   for i in range(1,154+1):
-    img = readpng(path2+prestr,i)
-    f = getFeatures(img, model)
-    tp = np.asarray(f)
-    tp = np.squeeze(tp)
-    p_feat_png.append(tp)
+    for j in range(0,10):
+      rr = random.randint(0,31)
+      img = readpng(path2+prestr, i, rr)
+      f = getFeatures(img, model)
+      tp = np.asarray(f)
+      tp = np.squeeze(tp)
+      p_feat_png.append(tp)
   a = np.asarray(p_feat_png)
   np.savetxt("pos_png_feat.csv", a, delimiter=",")
 
   '''  
   for i in range(1,154+1):
-    img = readimg(path+prestr,i)
-    f = getFeatures(img, model)
-    tp = np.asarray(f)
-    tp = np.squeeze(tp)
-    pos_feat.append(tp)
+    for j in range(0, 10):
+      rr = random.randint(0,31)
+      img = readimg(path+prestr,i,rr)
+      f = getFeatures(img, model)
+      tp = np.asarray(f)
+      tp = np.squeeze(tp)
+      pos_feat.append(tp)
 
   a = np.asarray(pos_feat)
   np.savetxt("pos_feat.csv", a, delimiter=",")
@@ -99,21 +111,25 @@ def main():
   prestr = "JPCNN"
   '''
   for i in range(1,93+1):
-    img = readimg(path+prestr, i)
-    f = getFeatures(img, model)
-    tp = np.asarray(f)
-    tp = np.squeeze(tp)
-    neg_feat.append(tp)
+    for j in range(0,10):
+      rr = random.randint(0,31)
+      img = readimg(path+prestr, i, rr)
+      f = getFeatures(img, model)
+      tp = np.asarray(f)
+      tp = np.squeeze(tp)
+      neg_feat.append(tp)
   a = np.asarray(neg_feat)
   np.savetxt("neg_feat.csv", a, delimiter=",")
   '''
   n_feat_png = []
   for i in range(1,93+1):
-    img = readpng(path2+prestr, i)
-    f = getFeatures(img, model)
-    tp = np.asarray(f)
-    tp = np.squeeze(tp)
-    n_feat_png.append(tp)
+    for j in range(0,10):
+      rr = random.randint(0,31)
+      img = readpng(path2+prestr, i, rr)
+      f = getFeatures(img, model)
+      tp = np.asarray(f)
+      tp = np.squeeze(tp)
+      n_feat_png.append(tp)
   a = np.asarray(n_feat_png)
   np.savetxt("neg_feat_png.csv",a,delimiter=",")
 
