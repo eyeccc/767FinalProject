@@ -19,30 +19,31 @@ def main():
   P = []
   N = []
 
-  with open('pos_png_feat.csv', 'r') as f:
+  with open('pos_png_feat1.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('neg_feat_png.csv', 'r') as f:
+  with open('neg_png_feat1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
+  '''
   for ele in P:
     ele.pop()
   for ele in N:
-    ele.pop()
+    ele.pop()'''
   #print(len(P[0]))
   P1 = [[float(j) for j in i] for i in P]
   N1 = [[float(j) for j in i] for i in N]
 
-  with open('pos_feat.csv', 'r') as f:
+  with open('pos_feat1.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('neg_feat.csv', 'r') as f:
+  with open('neg_feat1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
-  for ele in P:
+  '''for ele in P:
     ele.pop()
   for ele in N:
-    ele.pop()
+    ele.pop()'''
 
   P2 = [[float(j) for j in i] for i in P]
   N2 = [[float(j) for j in i] for i in N]
@@ -82,7 +83,7 @@ def main():
   clfsvm = svm.SVC()
   clfsvm.fit(train1, y1) 
   clf.fit(train1, y1)
-  
+  dimfeat = len(P[0])
   P_test = len(P) - pos_num
   N_test = len(N) - neg_num
   test = P1[-P_test:] + P2[-P_test:] + N1[-N_test:] + N2[-N_test:]
@@ -110,7 +111,7 @@ def main():
   data = np.asarray(train1)
   labels = np.asarray(y1)
   model = Sequential()
-  model.add(Dense(1, input_dim=2048, activation='softmax'))
+  model.add(Dense(1, input_dim=dimfeat, activation='softmax'))
   model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['accuracy'])

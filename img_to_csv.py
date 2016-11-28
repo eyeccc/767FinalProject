@@ -17,6 +17,7 @@ import h5py
 from keras.preprocessing import image
 from keras.models import Model
 from imagenet_utils import preprocess_input, decode_predictions
+from skimage.feature import hog
 # path for images 
 # /Users/waster/Downloads/All247images
 # /Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19
@@ -41,8 +42,8 @@ def readimg(prestr, idx, rx, ry): # for binary image
 #B = imresize(B,[256,256])
   B = B.resize((256,256), Image.ANTIALIAS)
   B = B.crop((rx,ry,rx+224,ry+224))
-  B = np.asarray(B)
-  B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+  #B = np.asarray(B)
+  #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
 
   return B
 def readpng(prestr, idx, rx, ry):
@@ -52,8 +53,8 @@ def readpng(prestr, idx, rx, ry):
   B = A.resize((256,256), Image.ANTIALIAS)
 #  B = imresize(A,[224,224])
   B = B.crop((rx,ry,rx+224,ry+224))
-  B = np.asarray(B)
-  B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+  #B = np.asarray(B)
+  #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
   return B
 
 def sift_feat(img):
@@ -68,7 +69,7 @@ def get_activations(model, layer_idx, X_batch):
   activations = get_activations([X_batch,0])
   return activations
 
-def writeFeat(imgPath, imgType, maxidx, outname):
+def writeFeat(imgPath, imgType, maxidx, model, outname):
   arr_out = []
   for i in range(1,maxidx+1):
     for j in range(0,10):
@@ -78,10 +79,18 @@ def writeFeat(imgPath, imgType, maxidx, outname):
         img = readpng(imgPath, i, rx, ry)
       else:
         img = readimg(imgPath, i, rx, ry)
-      f = getFeatures(img, model)
+      B = np.asarray(img)
+      B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+      B = np.divide(B, 3.)
+      f = getFeatures(B, model)
       tp = np.asarray(f)
       tp = np.squeeze(tp)
-      tp = np.append(tp, [i])
+      tp = tp.flatten()
+      #tp = np.append(tp, [i])
+      #(fd, hog_image) = hog(img, orientations=8, pixels_per_cell=(16, 16), cells_per_block=(1, 1), visualise=True)
+      #tp2 = np.asarray(hog_image)
+      #tpa = np.concatenate((tp, tp2), axis=0)
+      #tpa = tp + tp2
       arr_out.append(tp)
   a = np.asarray(arr_out)
   np.savetxt(outname, a, delimiter=",")
@@ -93,13 +102,13 @@ def main():
   path = "/Users/waster/Downloads/All247images/"
   path2 = "/Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19/"
   prestr = "JPCLN"
-
-  writeFeat(path2+prestr, 1, 154, "pos_png_feat.csv")
-  writeFeat(path+prestr, 0, 154, "pos_feat.csv")
+  #writeFeat(path2+prestr, 1, 1, model, "test.csv")
+  writeFeat(path2+prestr, 1, 154, model,  "pos_png_feat1.csv")
+  writeFeat(path+prestr, 0, 154, model, "pos_feat1.csv")
 
   prestr = "JPCNN"
-  writeFeat(path2+prestr, 1, 93, "neg_png_feat.csv")
-  writeFeat(path+prestr, 0, 93, "neg_feat.csv")
+  writeFeat(path2+prestr, 1, 93, model, "neg_png_feat1.csv")
+  writeFeat(path+prestr, 0, 93, model, "neg_feat1.csv")
   
 
 if __name__ == '__main__':
