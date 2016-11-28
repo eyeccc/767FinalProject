@@ -117,6 +117,29 @@ def main():
   model.fit(data, labels, nb_epoch=30, batch_size=32)
   score = model.evaluate(test, test_y, batch_size=32)
   print(score)
+  '''
+  model1 = Sequential()
+# Dense(64) is a fully-connected layer with 64 hidden units.
+# in the first layer, you must specify the expected input data shape:
+# here, 20-dimensional vectors.
+  model1.add(Dense(64, input_dim=2048, init='uniform'))
+  model1.add(Activation('tanh'))
+  model1.add(Dropout(0.5))
+  model1.add(Dense(64, init='uniform'))
+  model1.add(Activation('tanh'))
+  model1.add(Dropout(0.5))
+  model1.add(Dense(10, init='uniform'))
+  model1.add(Activation('softmax'))
 
+  sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+  model1.compile(loss='categorical_crossentropy',
+              optimizer=sgd,
+              metrics=['accuracy'])
+
+  model1.fit(X_train, y_train,
+          nb_epoch=20,
+          batch_size=16)
+  score = model1.evaluate(X_test, y_test, batch_size=16)
+  '''
 if __name__ == '__main__':
   main()
