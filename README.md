@@ -38,6 +38,7 @@ pool1, res2c, res3d, res4f, and pool5
    1. http://machinelearningmastery.com/image-augmentation-deep-learning-keras/
    2. http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html
    3. https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+4. contrast stretching: https://arxiv.org/pdf/1603.08486.pdf
 
 
 ## More Info about Lung Nodule
@@ -54,6 +55,9 @@ The doctor will look at the X-ray to evaluate the size and shape of the nodule, 
 1. https://www.cs.tau.ac.il/~wolf/papers/SPIE15chest.pdf
 2. http://my.clevelandclinic.org/health/diseases_conditions/hic_Pulmonary_Nodules
 3. http://cis-linux1.temple.edu/~wangp/5603-AI/Project/2016S/Transfer_ImageNet.pdf
+
+## PPT
+https://docs.google.com/presentation/d/1sBLeiPUyPBZl__jUt5zuR4w3zGU0fA9u9FBkoZ-kAys/edit#slide=id.gcb9a0b074_1_0
 
 ## Disclaimer
 I used my friends laptop for part of the implementation and forgot to change git config file. Thus, it will show other contributor, but it's actually me...
