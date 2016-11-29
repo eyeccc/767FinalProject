@@ -39,6 +39,7 @@ pool1, res2c, res3d, res4f, and pool5
    2. http://lamda.nju.edu.cn/weixs/project/CNNTricks/CNNTricks.html
    3. https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 4. contrast stretching: https://arxiv.org/pdf/1603.08486.pdf
+5. http://www.isi.uu.nl/Gallery/noduledetection/
 
 
 ## More Info about Lung Nodule
