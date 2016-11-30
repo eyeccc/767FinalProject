@@ -19,10 +19,10 @@ def main():
   P = []
   N = []
 
-  with open('pos_png_feat1.csv', 'r') as f:
+  with open('pos_png_featf1.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('neg_png_feat1.csv', 'r') as f:
+  with open('neg_png_featf1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
   '''
@@ -34,10 +34,10 @@ def main():
   P1 = [[float(j) for j in i] for i in P]
   N1 = [[float(j) for j in i] for i in N]
 
-  with open('pos_feat1.csv', 'r') as f:
+  with open('pos_featf1.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('neg_feat1.csv', 'r') as f:
+  with open('neg_featf1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
   '''for ele in P:
@@ -111,12 +111,14 @@ def main():
   data = np.asarray(train1)
   labels = np.asarray(y1)
   model = Sequential()
-  model.add(Dense(1, input_dim=dimfeat, activation='softmax'))
+  model.add(Dense(60, input_dim=dimfeat, activation='relu'))
+  model.add(Dense(1, activation='softmax'))
   model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['accuracy'])
-  model.fit(data, labels, nb_epoch=30, batch_size=32)
-  score = model.evaluate(test, test_y, batch_size=32)
+  l = labels.reshape((-1, 1))
+  model.fit(data, l, nb_epoch=100)
+  score = model.evaluate(test, test_y)
   print(score)
   '''
   model1 = Sequential()
