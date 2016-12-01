@@ -72,9 +72,10 @@ def get_activations(model, layer_idx, X_batch):
 
 def writeFeat(imgPath, imgType, maxidx, model, outname):
   arr_out = []
-  for i in range(1,maxidx+1):
-    print(outname + str(i))
-    for j in range(0,10):#10
+  for j in range(0,20):#20
+    for i in range(1,maxidx+1):
+      #print(outname + str(i))
+    
       rx = random.randint(0,31)
       ry = random.randint(0,31)
       if (imgType == 1):
@@ -138,7 +139,7 @@ def main():
     B = np.divide(B, 3.)
     data.append(B)
     labels.append(1)
-  '''
+  
   for idx in range(1,154+1):
     rx = random.randint(0,31)
     ry = random.randint(0,31)
@@ -148,7 +149,8 @@ def main():
     B = np.divide(B, 3.)
     data.append(B)
     labels.append(1)
-    
+  '''
+  
   
   #writeFeat(path2+prestr, 1, 1, model, "test.csv")
   #154
@@ -176,7 +178,7 @@ def main():
     B = np.divide(B, 3.)
     data.append(B)
     labels.append(0)
-  '''
+  
   for idx in range(1, 93+1):
     rx = random.randint(0,31)
     ry = random.randint(0,31)
@@ -191,13 +193,36 @@ def main():
   data = np.asarray(data)
   labels = np.asarray(labels)
   l = labels.reshape((-1, 1))
+  '''
   #model = base_model
   #for i in range(0,len(data)):
     #d = data[i]
     #d = np.transpose(d,(2,0,1))
     #d = np.expand_dims(d, axis=0)
     #l = labels[i]
-  model.fit(data, l, nb_epoch=10)#only train the layer i add
+  info = []
+  with open('pos_and_bm.csv', 'r') as f:
+    reader = csv.reader(f)
+    info = list(reader)
+  info = [[int(j) for j in i] for i in info]
+  path = "cropped_img/c"
+  imglist = []
+  y = []
+  for j in range(0,20):
+    for i in range(1,154+1):
+      rx = random.randint(0,31)
+	  ry = random.randint(0,31)
+      im = readpng(path, i, rx, ry)
+	  B = np.asarray(im)
+      B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+      B = np.divide(B, 3.)
+	  imglist.append(B)
+	  y.append(info[i][2])
+
+  X = np.asarray(imglist)
+  y = np.asarray(y)
+  y = y.reshape((-1, 1))
+  model.fit(X, y, nb_epoch=10)#only train the layer i add
   for layer in model.layers[:170]:
     layer.trainable = False
   for layer in model.layers[170:]:
@@ -211,8 +236,9 @@ def main():
   #writeFeat(path2+prestr, 1, 93, model1, "neg_png_featf1.csv")
   #writeFeat(path+prestr, 0, 93, model1, "neg_featf1.csv")
   prestr = "JPCLN"
-  writeFeat(path3+"pp",1,154,model1,"pp_feat.csv")
-  writeFeat(path3+"pn",1,93,model1,"pn_feat.csv")
+  writeFeat(path,1,154,model1,"bm.csv")
+  #writeFeat(path3+"pp",1,154,model1,"pp_feat.csv")
+  #writeFeat(path3+"pn",1,93,model1,"pn_feat.csv")
   #writeFeat(path2+prestr, 1, 154, model1,  "pos_png_featf1.csv")
   #writeFeat(path+prestr, 0, 154, model1, "pos_featf1.csv")
 if __name__ == '__main__':
