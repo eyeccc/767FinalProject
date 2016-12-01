@@ -27,7 +27,7 @@ def readpng(prestr, idx, rx, ry):
   A = Image.open(name)
   #B = A.resize((256,256), Image.ANTIALIAS)
 #  B = imresize(A,[224,224])
-  B = B.crop((rx,ry,rx+224,ry+224))
+  B = A.crop((rx,ry,rx+224,ry+224))
   B = np.asarray(B)
   #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
   return B
@@ -47,23 +47,25 @@ def main():
     reader = csv.reader(f)
     info = list(reader)
   info = [[int(j) for j in i] for i in info]
+  #print(len(info))
+  #print(len(info[0]))
   path = "cropped_img/c"
   imglist = []
   y = []
   for j in range(0,20):
     for i in range(1,154+1):
       rx = random.randint(0,31)
-	  ry = random.randint(0,31)
+      ry = random.randint(0,31)
       im = readpng(path, i, rx, ry)
-	  imglist.append(im)
-	  y.append(info[i][2])
+      imglist.append(im)
+      y.append(info[i-1][2])
 
   X = np.asarray(imglist)
   y = np.asarray(y)
   l = y.reshape((-1, 1))
-  
+  '''
   seed = 7
-  numpy.random.seed(seed)
+  np.random.seed(seed)
   estimators = []
   estimators.append(('standardize', StandardScaler()))
   estimators.append(('mlp', KerasClassifier(build_fn=create_smaller, nb_epoch=100, batch_size=5, verbose=0)))
@@ -72,9 +74,9 @@ def main():
   results = cross_val_score(pipeline, X, l, cv=kfold)
   print("Smaller: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
   '''
-  dimfeat = len(P1[0])
+  #dimfeat = len(P1[0])
   model = Sequential()
-  model.add(Dense(60, input_dim=(224,224,) activation='relu'))
+  model.add(Dense(60, input_dim=(224,224,), activation='relu'))
   model.add(Dense(1, activation='softmax'))
   model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
@@ -82,7 +84,7 @@ def main():
 
   
   model.fit(X, l, validation_split=0.1, nb_epoch=150, batch_size=10)
-  '''
+  
   
 if __name__ == '__main__':
   main()
