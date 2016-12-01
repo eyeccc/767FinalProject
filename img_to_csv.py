@@ -113,11 +113,13 @@ def main():
   pos_feat = []
   path = "/Users/waster/Downloads/All247images/"
   path2 = "/Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19/"
+  path3 = "/Users/waster/Desktop/767img/"
+  prestr1 = "pp"
   prestr = "JPCLN"
 
   data = []
   labels = []
-
+  '''
   for idx in range(1,154+1):
     rx = random.randint(0,31)
     ry = random.randint(0,31)
@@ -136,6 +138,16 @@ def main():
     B = np.divide(B, 3.)
     data.append(B)
     labels.append(1)
+  '''
+  for idx in range(1,154+1):
+    rx = random.randint(0,31)
+    ry = random.randint(0,31)
+    im = readpng(path3+prestr1, idx, rx, ry)
+    B = np.asarray(im)
+    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+    B = np.divide(B, 3.)
+    data.append(B)
+    labels.append(1)
     
   
   #writeFeat(path2+prestr, 1, 1, model, "test.csv")
@@ -144,6 +156,7 @@ def main():
   #writeFeat(path+prestr, 0, 10, model, "pos_featf.csv")
   #93
   prestr = "JPCNN"
+  '''
   for idx in range(1,93+1):
     rx = random.randint(0,31)
     ry = random.randint(0,31)
@@ -158,6 +171,16 @@ def main():
     rx = random.randint(0,31)
     ry = random.randint(0,31)
     im = readimg(path+prestr, idx, rx, ry)
+    B = np.asarray(im)
+    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+    B = np.divide(B, 3.)
+    data.append(B)
+    labels.append(0)
+  '''
+  for idx in range(1, 93+1):
+    rx = random.randint(0,31)
+    ry = random.randint(0,31)
+    im = readpng(path3+"pn", idx, rx, ry)
     B = np.asarray(im)
     B = np.repeat(B[:,:,np.newaxis],3,axis=2)
     B = np.divide(B, 3.)
@@ -182,13 +205,15 @@ def main():
 
   model.compile(optimizer='rmsprop', loss='binary_crossentropy')
   model.fit(data, l, nb_epoch=10)
-  model.save('fineTuneModel1.h5')
+  model.save('fineTuneModelp.h5')
 
   model1 = Model(input=model.input, output=model.get_layer('avg_pool').output)
-  writeFeat(path2+prestr, 1, 93, model1, "neg_png_featf1.csv")
-  writeFeat(path+prestr, 0, 93, model1, "neg_featf1.csv")
+  #writeFeat(path2+prestr, 1, 93, model1, "neg_png_featf1.csv")
+  #writeFeat(path+prestr, 0, 93, model1, "neg_featf1.csv")
   prestr = "JPCLN"
-  writeFeat(path2+prestr, 1, 154, model1,  "pos_png_featf1.csv")
-  writeFeat(path+prestr, 0, 154, model1, "pos_featf1.csv")
+  writeFeat(path3+"pp",1,154,model1,"pp_feat.csv")
+  writeFeat(path3+"pn",1,93,model1,"pn_feat.csv")
+  #writeFeat(path2+prestr, 1, 154, model1,  "pos_png_featf1.csv")
+  #writeFeat(path+prestr, 0, 154, model1, "pos_featf1.csv")
 if __name__ == '__main__':
   main()

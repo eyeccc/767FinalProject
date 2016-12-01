@@ -22,34 +22,34 @@ def main():
   P = []
   N = []
   filepath = '/Users/waster/767csv/'
-  with open(filepath+'pp_feat.csv', 'r') as f:
+  with open('pp_feat.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open(filepath+'pn_feat.csv', 'r') as f:
+  with open('pn_feat.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
 
   P1 = [[float(j) for j in i] for i in P]
   N1 = [[float(j) for j in i] for i in N]
-  '''
-  with open(filepath+'pos_feat1.csv', 'r') as f:
+  
+  with open(filepath+'pos_featf.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open(filepath+'neg_feat1.csv', 'r') as f:
+  with open(filepath+'neg_featf.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
 
   P2 = [[float(j) for j in i] for i in P]
   N2 = [[float(j) for j in i] for i in N]
-  '''
+  
   random.shuffle(P1)
   random.shuffle(N1)
-  #random.shuffle(P2)
-  #random.shuffle(N2)
+  random.shuffle(P2)
+  random.shuffle(N2)
 
   loo = LeaveOneOut()
-  X = N1 + P1 #+ N2 + P2
-  y = [0]*len(N1) + [1]*len(P1) #+ [0]*len(N2) + [1]*len(P1)
+  X = N1 + P1 + N2 + P2
+  y = [0]*len(N1) + [1]*len(P1) + [0]*len(N2) + [1]*len(P1)
   clfsvm = svm.SVC()
   clf = MLPClassifier(solver='lbfgs', alpha=1e-5,hidden_layer_sizes=(5, 2), random_state=1)
   X = np.asarray(X)
@@ -60,7 +60,7 @@ def main():
   predicted = cross_val_predict(clfsvm, X, y, cv=10)
   result = metrics.accuracy_score(y, predicted) 
   print(result)
-  '''
+  
   dimfeat = len(P1[0])
   model = Sequential()
   model.add(Dense(60, input_dim=dimfeat, activation='relu'))
@@ -72,7 +72,7 @@ def main():
   l = y.reshape((-1, 1))
   #model.fit(data, l, nb_epoch=100)
   model.fit(X, l, validation_split=0.1, nb_epoch=150, batch_size=10)
-  '''
+  
   
 if __name__ == '__main__':
   main()
