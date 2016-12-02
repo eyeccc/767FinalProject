@@ -211,13 +211,13 @@ def main():
   for j in range(0,20):
     for i in range(1,154+1):
       rx = random.randint(0,31)
-	  ry = random.randint(0,31)
+      ry = random.randint(0,31)
       im = readpng(path, i, rx, ry)
-	  B = np.asarray(im)
+      B = np.asarray(im)
       B = np.repeat(B[:,:,np.newaxis],3,axis=2)
       B = np.divide(B, 3.)
-	  imglist.append(B)
-	  y.append(info[i][2])
+      imglist.append(B)
+      y.append(info[i-1][2])
 
   X = np.asarray(imglist)
   y = np.asarray(y)
