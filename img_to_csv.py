@@ -57,6 +57,17 @@ def readpng(prestr, idx, rx, ry):
   #B = np.asarray(B)
   #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
   return B
+def readpngnr(prestr, idx):
+  filename = prestr
+  name = filename + str(idx).zfill(3) + ".png"
+  A = Image.open(name)
+  B = A.resize((224,224), Image.ANTIALIAS)
+#  B = imresize(A,[224,224])
+
+  B = np.asarray(B)
+  B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+  B = np.divide(B, 3.)
+  return B
 
 def sift_feat(img):
   sift = cv2.xfeatures2d.SIFT_create()
@@ -92,154 +103,59 @@ def writeFeat(imgPath, imgType, maxidx, model, outname):
     arr_out.append(tp)
   a = np.asarray(arr_out)
   np.savetxt(outname, a, delimiter=",")
+def writePatchFeat(imgPath, maxidx, model, outname):
+  arr_out = []
+
+  for i in range(1,maxidx+1):
+    img = readpngnr(imgPath, i)
+
+    f = getFeatures(B, model)
+    tp = np.asarray(f)
+    tp = np.squeeze(tp)
+	tp = tp.flatten();
+    arr_out.append(tp)
+  a = np.asarray(arr_out)
+  np.savetxt(outname, a, delimiter=",")
 
 def main():
   base_model = ResNet50(weights='imagenet')
-  #model = Model(input=base_model.input, output=base_model.get_layer('avg_pool').output)
-  #model = base_model
-  #base_model.layers.pop()
-  #base_model.add(Dense(2, activation='softmax', name='fc8'))
-
-  x = base_model.get_layer('avg_pool').output
-  #print(x.shape)
+  x = base_model.get_layer('res2a_branch2a').output
   x = GlobalAveragePooling2D()(x)
-  #x = Dense(1024, activation='relu')(x)
   predictions = Dense(1, activation='softmax')(x)
   model = Model(input=base_model.input, output=predictions)
-  for layer in base_model.layers:
-    layer.trainable = False
   model.compile(optimizer='rmsprop', loss='binary_crossentropy')
-
-
-  pos_feat = []
-  path = "/Users/waster/Downloads/All247images/"
-  path2 = "/Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19/"
-  path3 = "/Users/waster/Desktop/767img/"
-  prestr1 = "pp"
-  prestr = "JPCLN"
+  # img patch with nodule
+  path = "cropped_img/"
+  prep = "cnp"
+  # img patch without nodule
+  pren = "npatch"
 
   data = []
   labels = []
-  '''
+  
   for idx in range(1,154+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readpng(path2+prestr, idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
+    im = readpngnr(path+prep, idx)
     data.append(B)
     labels.append(1)
   for idx in range(1,154+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readimg(path+prestr, idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
-    data.append(B)
-    labels.append(1)
-  
-  for idx in range(1,154+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readpng(path3+prestr1, idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
-    data.append(B)
-    labels.append(1)
-  '''
-  
-  
-  #writeFeat(path2+prestr, 1, 1, model, "test.csv")
-  #154
-  #writeFeat(path2+prestr, 1, 10, model,  "pos_png_featf.csv")
-  #writeFeat(path+prestr, 0, 10, model, "pos_featf.csv")
-  #93
-  prestr = "JPCNN"
-  '''
-  for idx in range(1,93+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readpng(path2+prestr, idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
-    #B = np.transpose()
+    im = readimgnr(path+pren, idx)
     data.append(B)
     labels.append(0)
-  for idx in range(1,93+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readimg(path+prestr, idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
-    data.append(B)
-    labels.append(0)
-  
-  for idx in range(1, 93+1):
-    rx = random.randint(0,31)
-    ry = random.randint(0,31)
-    im = readpng(path3+"pn", idx, rx, ry)
-    B = np.asarray(im)
-    B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-    B = np.divide(B, 3.)
-    data.append(B)
-    labels.append(0)
-  #writeFeat(path2+prestr, 1, 10, model, "neg_png_featf.csv")
-  #writeFeat(path+prestr, 0, 10, model, "neg_featf.csv")
+
   data = np.asarray(data)
   labels = np.asarray(labels)
   l = labels.reshape((-1, 1))
-  '''
-  #model = base_model
-  #for i in range(0,len(data)):
-    #d = data[i]
-    #d = np.transpose(d,(2,0,1))
-    #d = np.expand_dims(d, axis=0)
-    #l = labels[i]
-  info = []
-  with open('pos_and_bm.csv', 'r') as f:
-    reader = csv.reader(f)
-    info = list(reader)
-  info = [[int(j) for j in i] for i in info]
-  path = "cropped_img/c"
-  imglist = []
-  y = []
-  for j in range(0,20):
-    for i in range(1,154+1):
-      rx = random.randint(0,31)
-      ry = random.randint(0,31)
-      im = readpng(path, i, rx, ry)
-      B = np.asarray(im)
-      B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-      B = np.divide(B, 3.)
-      imglist.append(B)
-      y.append(info[i-1][2])
-
-  X = np.asarray(imglist)
-  y = np.asarray(y)
-  y = y.reshape((-1, 1))
-  model.fit(X, y, nb_epoch=10)#only train the layer i add
-  for layer in model.layers[:170]:
-    layer.trainable = False
-  for layer in model.layers[170:]:
-    layer.trainable = True
+  
+  model.fit(data, l, nb_epoch=10)#only train the layer i add
 
   model.compile(optimizer='rmsprop', loss='binary_crossentropy')
   model.fit(data, l, nb_epoch=10)
-  model.save('fineTuneModelp.h5')
+  #model.save('fineTuneModelp.h5')
 
-  model1 = Model(input=model.input, output=model.get_layer('avg_pool').output)
-  #writeFeat(path2+prestr, 1, 93, model1, "neg_png_featf1.csv")
-  #writeFeat(path+prestr, 0, 93, model1, "neg_featf1.csv")
-  prestr = "JPCLN"
-  writeFeat(path,1,154,model1,"bm.csv")
-  #writeFeat(path3+"pp",1,154,model1,"pp_feat.csv")
-  #writeFeat(path3+"pn",1,93,model1,"pn_feat.csv")
-  #writeFeat(path2+prestr, 1, 154, model1,  "pos_png_featf1.csv")
-  #writeFeat(path+prestr, 0, 154, model1, "pos_featf1.csv")
+  model1 = Model(input=model.input, output=model.get_layer('res2a_branch2a').output)
+
+  writePatchFeat(path+prep,154,model1,"patchfeatp.csv")
+  writePatchFeat(path+pren,154,model1,"patchfeatn.csv")
+
 if __name__ == '__main__':
   main()
