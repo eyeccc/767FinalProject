@@ -109,10 +109,10 @@ def writePatchFeat(imgPath, maxidx, model, outname):
   for i in range(1,maxidx+1):
     img = readpngnr(imgPath, i)
 
-    f = getFeatures(B, model)
+    f = getFeatures(img, model)
     tp = np.asarray(f)
     tp = np.squeeze(tp)
-	tp = tp.flatten();
+    tp = tp.flatten()
     arr_out.append(tp)
   a = np.asarray(arr_out)
   np.savetxt(outname, a, delimiter=",")
@@ -135,11 +135,11 @@ def main():
   
   for idx in range(1,154+1):
     im = readpngnr(path+prep, idx)
-    data.append(B)
+    data.append(im)
     labels.append(1)
   for idx in range(1,154+1):
-    im = readimgnr(path+pren, idx)
-    data.append(B)
+    im = readpngnr(path+pren, idx)
+    data.append(im)
     labels.append(0)
 
   data = np.asarray(data)
