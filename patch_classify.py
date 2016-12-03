@@ -18,23 +18,39 @@ from sklearn.model_selection import cross_val_predict
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
 from sklearn.cross_validation import train_test_split
+from sklearn import neighbors
 
 def main():
   #base_model = ResNet50(weights='imagenet')
   #model = Model(input=base_model.input, output=base_model.get_layer('avg_pool').output)
   P = []
   N = []
+  Np = []
+  test_p = []
+  test_n = []
   filepath = '/Users/waster/767csv/'
-  with open('patchfeatp.csv', 'r') as f:
+  with open('patch_train_p.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('patchfeatn.csv', 'r') as f:
+  with open('patch_test_p.csv', 'r') as f:
+    reader = csv.reader(f)
+    test_p = list(reader)
+  with open('patch_train_n1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
-
+  with open('patch_train_n2.csv', 'r') as f:
+    reader = csv.reader(f)
+    Np = list(reader)
+  with open('patch_test_n.csv', 'r') as f:
+    reader = csv.reader(f)
+    test_n = list(reader)
   P1 = [[float(j) for j in i] for i in P]
   N1 = [[float(j) for j in i] for i in N]
-  
+  Np = [[float(j) for j in i] for i in Np]
+  test_p = [[float(j) for j in i] for i in test_p]
+  test_n = [[float(j) for j in i] for i in test_n]
+
+  N1 = N1 + Np
   random.shuffle(P1)
   random.shuffle(N1)
 
@@ -43,15 +59,29 @@ def main():
   y = [0]*len(N1) + [1]*len(P1)
   X = np.asarray(X)
   y = np.asarray(y)
-  
-  scores = cross_val_score(LogisticRegression(), X, y, scoring='accuracy', cv=10)
+  test_x = test_n + test_p
+  test_y = [0]*len(test_n) + [1]*len(test_p)
+  test_x = np.asarray(test_x)
+  test_y = np.asarray(test_y)
+  #scores = cross_val_score(LogisticRegression(), X, y, scoring='accuracy', cv=10)
   print("accuracy")
-  print(scores)
-  print(scores.mean())
-  scores = cross_val_score(LogisticRegression(), X, y, scoring='roc_auc', cv=10)
+  #model2 = LogisticRegression()
+  #model2 = svm.SVC()
+  model2 = neighbors.KNeighborsClassifier()
+  model2.fit(X, y)
+  predicted = model2.predict(test_x)
+  #probs = model2.predict_proba(test_x)
+  print(metrics.accuracy_score(test_y, predicted))
   print("roc_auc")
-  print(scores)
-  print(scores.mean())
+  score2 = metrics.roc_auc_score(test_y, predicted)
+  print(score2)
+  #print(metrics.roc_auc_score(test_y, probs[:, 1]))
+  #print(scores)
+  #print(scores.mean())
+  #scores = cross_val_score(LogisticRegression(), X, y, scoring='roc_auc', cv=10)
+  #print("roc_auc")
+  #print(scores)
+  #print(scores.mean())
   
   '''
   clfsvm = svm.SVC()

@@ -138,7 +138,7 @@ def main():
     data.append(im)
     labels.append(1)
 
-  for i = range(1,2+1): #total 192, 128 as training
+  for i in range(1,2+1): #total 192, 128 as training
     for idx in range(1,64+1):
       s = str(i).zfill(3)
       im = readpngnr(path+pren+s, idx)
