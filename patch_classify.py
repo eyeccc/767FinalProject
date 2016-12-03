@@ -64,24 +64,18 @@ def main():
   test_x = np.asarray(test_x)
   test_y = np.asarray(test_y)
   #scores = cross_val_score(LogisticRegression(), X, y, scoring='accuracy', cv=10)
-  print("accuracy")
+  #print("accuracy")
   #model2 = LogisticRegression()
   #model2 = svm.SVC()
-  model2 = neighbors.KNeighborsClassifier()
-  model2.fit(X, y)
-  predicted = model2.predict(test_x)
+  #model2 = neighbors.KNeighborsClassifier()
+  #model2.fit(X, y)
+  #predicted = model2.predict(test_x)
   #probs = model2.predict_proba(test_x)
-  print(metrics.accuracy_score(test_y, predicted))
-  print("roc_auc")
-  score2 = metrics.roc_auc_score(test_y, predicted)
-  print(score2)
-  #print(metrics.roc_auc_score(test_y, probs[:, 1]))
-  #print(scores)
-  #print(scores.mean())
-  #scores = cross_val_score(LogisticRegression(), X, y, scoring='roc_auc', cv=10)
+  #print(metrics.accuracy_score(test_y, predicted))
   #print("roc_auc")
-  #print(scores)
-  #print(scores.mean())
+  #score2 = metrics.roc_auc_score(test_y, predicted)
+  #print(score2)
+  
   
   '''
   clfsvm = svm.SVC()
@@ -93,7 +87,7 @@ def main():
   predicted = cross_val_predict(clfsvm, X, y, cv=10)
   result = metrics.accuracy_score(y, predicted) 
   print(result)
-  
+  '''
   dimfeat = len(P1[0])
   model = Sequential()
   model.add(Dense(60, input_dim=dimfeat, activation='relu'))
@@ -103,9 +97,15 @@ def main():
               metrics=['accuracy'])
 
   l = y.reshape((-1, 1))
+  test_y = test_y.reshape((-1,1))
   #model.fit(data, l, nb_epoch=100)
-  model.fit(X, l, validation_split=0.1, nb_epoch=150, batch_size=10)
-  '''
+  model.fit(X, l, nb_epoch=150, batch_size=10)
+  scores = model.evaluate(test_data, test_y, batch_size=10)
+  print("accuracy")
+  print(scores)
+  print("predict")
+  print(model.predict(test_data, test_y))
+  
   
 if __name__ == '__main__':
   main()
