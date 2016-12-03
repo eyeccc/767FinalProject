@@ -11,7 +11,7 @@ import random
 # just to locate the resnet file in local machine
 sys.path.append("/Users/waster/deep-learning-models")
 from resnet50 import ResNet50
-from keras.layers.core import Activation
+#from keras.layers.core import Activation
 from keras import backend as K
 import h5py
 from keras.preprocessing import image
@@ -19,6 +19,11 @@ from keras.models import Model
 from imagenet_utils import preprocess_input, decode_predictions
 from skimage.feature import hog
 from keras.layers import Dense, GlobalAveragePooling2D
+from keras.models import Sequential
+from keras.layers import Dense, Activation
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.layers import Activation, Dropout, Flatten
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 # path for images 
 # /Users/waster/Downloads/All247images
 # /Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19
@@ -61,13 +66,17 @@ def readpngnr(prestr, idx):
   filename = prestr
   name = filename + str(idx).zfill(3) + ".png"
   A = Image.open(name)
-  B = A.resize((10,10), Image.ANTIALIAS) # resize to very small patch
+  B = A.resize((20,20), Image.ANTIALIAS) # resize to very small patch
 #  B = imresize(A,[224,224])
 
   B = np.asarray(B)
-  B = np.reshape(B,(1,10,10))
-  #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
-  #B = np.divide(B, 3.)
+  #B = B.flatten()
+  #B = np.reshape(B,(1,10,10))
+  B = np.repeat(B[:,:,np.newaxis],3,axis=2)
+  B = np.divide(B, 3.)
+  B = np.reshape(B,(3,20,20))
+  B = np.expand_dims(B, axis=0)
+  B = preprocess_input(B)
   return B
 
 def get_activations(model, layer_idx, X_batch):
@@ -143,7 +152,7 @@ def main():
     im = readpngnr(path+pren+s, idx)
     test_data.append(im)
     test_y.append(0)
-
+  dimfeat = len(data[0])
   data = np.asarray(data)
   labels = np.asarray(labels)
   test_data = np.asarray(test_data)
@@ -154,20 +163,35 @@ def main():
   
   #dimfeat = len(P1[0])
   model = Sequential()
-  model.add(Convolution2D(10, 3, 3, border_mode='valid', input_shape=(1, 10, 10)))
+  model.add(Convolution2D(10, 3, 3, input_shape=(3, 20, 20)))
   model.add(Activation('relu'))
+  #model.add(MaxPooling2D(pool_size=(2, 2)))
+  #model.add(GlobalAveragePooling2D())
   #model.add(Dense(60, input_dim=dimfeat, activation='relu'))
-  model.add(Dense(1, activation='softmax'))
+  #model.add(Dense(1, activation='softmax'))
+  model.add(Flatten())  # this converts our 3D feature maps to 1D feature vectors
+  #model.add(Dense(64))
+  #model.add(Activation('relu'))
+  #model.add(Dropout(0.5))
+  model.add(Dense(1))
+  model.add(Activation('softmax'))
   model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
-  l = y.reshape((-1, 1))
+  #l = labels.reshape((-1, 1))
   #model.fit(data, l, nb_epoch=100)
-  model.fit(data, l, nb_epoch=30, batch_size=10)
-  score = model.evaluate(test_data, test_y, batch_size=10)
-  print("score")
-  print(score)
+  for j in range(0,100):
+    for i in range(0,len(data)):
+      model.fit(data[i], l[i], nb_epoch=1, batch_size=10)
+  num = 0.
+  for i in range(0,len(test_y)):
+    score = model.evaluate(test_data[i], test_y[i], batch_size=10)
+    print("score")
+    print(score[1])
+    num = num + score[1]
+
+  print(num / len(test_y))
   '''
   writePatchFeat(path+prep,1,135,model1,"patch_train_p.csv")
   writePatchFeat(path+prep,136,154,model1,"patch_test_p.csv")
