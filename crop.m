@@ -1,8 +1,8 @@
 M = csvread('pos_and_bm.csv');
 Label = [];
 for i = 136:1:154
-infile = strcat('D:\上課相關\Fall 2016\767 Medical Image Analysis\project_idea\JPCLN', num2str(i, '%03d'), '.png');
-im = imread(infile);
+%infile = strcat('D:\上課相關\Fall 2016\767 Medical Image Analysis\project_idea\JPCLN', num2str(i, '%03d'), '.png');
+%im = imread(infile);
 
 % while(1)
 %     r = floor(rand*2048);
@@ -19,13 +19,13 @@ for k = 1:1:8
     for j = 1:1:8
         r = (k-1)*256+1;
         c = (j-1)*256+1;
-        out = im(r:r+255, c:c+255);
-        outfile = strcat('D:\上課相關\Fall 2016\767 Medical Image Analysis\767FinalProject\cropped_img\test_nodule_img_patch\test_patch', num2str(i,'%03d'),num2str(count, '%03d'), '.png');
+        %out = im(r:r+255, c:c+255);
+        %outfile = strcat('D:\上課相關\Fall 2016\767 Medical Image Analysis\767FinalProject\cropped_img\test_nodule_img_patch\test_patch', num2str(i,'%03d'),num2str(count, '%03d'), '.png');
         %disp(size(out));
         count = count + 1;
-        imwrite(out,outfile);
+        %imwrite(out,outfile);
         bound = M(i,3)*100/15/2;
-        if(M(i,1) + bound < r || M(i,1) - bound > r || M(i,2) + bound > c || M(i,2) - bound < c)
+        if(M(i,1) + bound < r || M(i,1) - bound > r +255 || M(i,2) + bound > c+255 || M(i,2) - bound < c)
             Label = [Label; 0];
         else
             Label = [Label; 1];
