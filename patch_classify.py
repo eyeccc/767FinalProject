@@ -28,20 +28,20 @@ def main():
   Np = []
   test_p = []
   test_n = []
-  filepath = '/Users/waster/767csv/'
-  with open('patch_train_p.csv', 'r') as f:
+  filepath = '/Users/waster/767csv/patch/'
+  with open(filepath+'patch_train_p.csv', 'r') as f:
     reader = csv.reader(f)
     P = list(reader)
-  with open('patch_test_p.csv', 'r') as f:
+  with open(filepath+'patch_test_p.csv', 'r') as f:
     reader = csv.reader(f)
     test_p = list(reader)
-  with open('patch_train_n1.csv', 'r') as f:
+  with open(filepath+'patch_train_n1.csv', 'r') as f:
     reader = csv.reader(f)
     N = list(reader)
-  with open('patch_train_n2.csv', 'r') as f:
+  with open(filepath+'patch_train_n2.csv', 'r') as f:
     reader = csv.reader(f)
     Np = list(reader)
-  with open('patch_test_n.csv', 'r') as f:
+  with open(filepath+'patch_test_n.csv', 'r') as f:
     reader = csv.reader(f)
     test_n = list(reader)
   P1 = [[float(j) for j in i] for i in P]
