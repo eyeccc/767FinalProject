@@ -103,10 +103,10 @@ def writeFeat(imgPath, imgType, maxidx, model, outname):
     arr_out.append(tp)
   a = np.asarray(arr_out)
   np.savetxt(outname, a, delimiter=",")
-def writePatchFeat(imgPath, maxidx, model, outname):
+def writePatchFeat(imgPath, minidx, maxidx, model, outname):
   arr_out = []
 
-  for i in range(1,maxidx+1):
+  for i in range(minidx,maxidx+1):
     img = readpngnr(imgPath, i)
 
     f = getFeatures(img, model)
@@ -128,22 +128,26 @@ def main():
   path = "cropped_img/"
   prep = "cnp"
   # img patch without nodule
-  pren = "npatch"
+  pren = "n"
 
   data = []
   labels = []
   
-  for idx in range(1,154+1):
+  for idx in range(1,135+1):#total 154, 135 as training and 
     im = readpngnr(path+prep, idx)
     data.append(im)
     labels.append(1)
-  for idx in range(1,154+1):
-    im = readpngnr(path+pren, idx)
-    data.append(im)
-    labels.append(0)
+
+  for i = range(1,2+1): #total 192, 128 as training
+    for idx in range(1,64+1):
+      s = str(i).zfill(3)
+      im = readpngnr(path+pren+s, idx)
+      data.append(im)
+      labels.append(0)
 
   data = np.asarray(data)
   labels = np.asarray(labels)
+
   l = labels.reshape((-1, 1))
   
   model.fit(data, l, nb_epoch=10)#only train the layer i add
@@ -154,8 +158,14 @@ def main():
 
   model1 = Model(input=model.input, output=model.get_layer('res2a_branch2a').output)
 
-  writePatchFeat(path+prep,154,model1,"patchfeatp.csv")
-  writePatchFeat(path+pren,154,model1,"patchfeatn.csv")
+  writePatchFeat(path+prep,1,135,model1,"patch_train_p.csv")
+  writePatchFeat(path+prep,136,154,model1,"patch_test_p.csv")
+  s = "001"
+  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n1.csv")
+  s = "002"
+  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n2.csv")
+  s = "003"
+  writePatchFeat(path+pren+s,1,64,model1,"patch_test_n.csv")
 
 if __name__ == '__main__':
   main()
