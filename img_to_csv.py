@@ -19,6 +19,7 @@ from keras.models import Model
 from imagenet_utils import preprocess_input, decode_predictions
 from skimage.feature import hog
 from keras.layers import Dense, GlobalAveragePooling2D
+from skimage import data, color, exposure
 # path for images 
 # /Users/waster/Downloads/All247images
 # /Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19
@@ -29,7 +30,8 @@ def getFeatures(img,  model):
   x = preprocess_input(x)
   
   feat = model.predict(x)
-
+  #print("feature shape")
+  #print(feat.shape)
   return feat
 
 def readimg(prestr, idx, rx, ry): # for binary image
@@ -120,6 +122,7 @@ def writePatchFeat(imgPath, minidx, maxidx, model, outname):
 def main():
   base_model = ResNet50(weights='imagenet')
   x = base_model.get_layer('res2a_branch2a').output
+  #x = base_model.get_layer('avg_pool').output
   x = GlobalAveragePooling2D()(x)
   predictions = Dense(1, activation='softmax')(x)
   model = Model(input=base_model.input, output=predictions)
@@ -132,22 +135,66 @@ def main():
 
   data = []
   labels = []
+  data0 = []
+  data1 = []
   
   for idx in range(1,135+1):#total 154, 135 as training and 
     im = readpngnr(path+prep, idx)
+    #fd, hog_image = hog(im, orientations=8, pixels_per_cell=(16, 16),
+    #                cells_per_block=(1, 1), visualise=True)
     data.append(im)
+    #hog_image = np.asarray(hog_image).flatten()
+    #data0.append(hog_image)
     labels.append(1)
-
+  '''
+  data05 = []
+  for idx in range(136,154+1):#total 154, 135 as training and 
+    im = readpngnr(path+prep, idx)
+    fd, hog_image = hog(im, orientations=8, pixels_per_cell=(16, 16),
+                    cells_per_block=(1, 1), visualise=True)
+    #data.append(im)
+    hog_image = np.asarray(hog_image).flatten()
+    data05.append(hog_image)
+    labels.append(1)
+  '''
   for i in range(1,2+1): #total 192, 128 as training
     for idx in range(1,64+1):
       s = str(i).zfill(3)
       im = readpngnr(path+pren+s, idx)
+      #fd, hog_image = hog(im, orientations=8, pixels_per_cell=(16, 16),
+      #              cells_per_block=(1, 1), visualise=True)
+      #hog_image = np.asarray(hog_image).flatten()
+      #data1.append(hog_image)
       data.append(im)
       labels.append(0)
-
+  '''
+  data2 = []
+  for idx in range(1,64+1):
+    s = str(3).zfill(3)
+    im = readpngnr(path+pren+s, idx)
+    fd, hog_image = hog(im, orientations=8, pixels_per_cell=(16, 16),
+                cells_per_block=(1, 1), visualise=True)
+    hog_image = np.asarray(hog_image).flatten()
+    data2.append(hog_image)
+    labels.append(0)
+  '''
   data = np.asarray(data)
   labels = np.asarray(labels)
-
+  '''
+  data = np.asarray(data0)
+  data = np.asarray(data05)
+  data = np.asarray(data1)
+  data = np.asarray(data2)
+  
+  a = np.asarray(data0)
+  np.savetxt("hog_train_posp.csv", a, delimiter=",")
+  a = np.asarray(data1)
+  np.savetxt("hog_train_negp.csv", a, delimiter=",")
+  a = np.asarray(data05)
+  np.savetxt("hog_test_posp.csv", a, delimiter=",")
+  a = np.asarray(data2)
+  np.savetxt("hog_test_negp.csv", a, delimiter=",")
+  '''
   l = labels.reshape((-1, 1))
   
   model.fit(data, l, nb_epoch=10)#only train the layer i add
@@ -157,15 +204,35 @@ def main():
   #model.save('fineTuneModelp.h5')
 
   model1 = Model(input=model.input, output=model.get_layer('res2a_branch2a').output)
+  #model1 = Model(input=model.input, output=model.get_layer('avg_pool').output)
+  img = readpngnr(path+prep, 1)
+  feat = getFeatures(img,  model1)
+  print(feat.shape)
+  sixtyfour = []
+  fig = plt.figure()
+  for i in range(0,64):
+    tmp = np.asarray(feat[:,:,:,i]).reshape((55,55))
+    #fig.add_subplot(8,8,i+1)
+    imsave('outfile'+str(i)+'.png', tmp)
+    sixtyfour.append(tmp)
+  #plt.show()
 
-  writePatchFeat(path+prep,1,135,model1,"patch_train_p.csv")
-  writePatchFeat(path+prep,136,154,model1,"patch_test_p.csv")
+  '''
+  writePatchFeat(path+prep,1,135,model1,"patch_train_pl.csv")
+  
+  writePatchFeat(path+prep,136,154,model1,"patch_test_pl.csv")
   s = "001"
-  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n1.csv")
+  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n1l.csv")
   s = "002"
-  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n2.csv")
+  writePatchFeat(path+pren+s,1,64,model1,"patch_train_n2l.csv")
   s = "003"
-  writePatchFeat(path+pren+s,1,64,model1,"patch_test_n.csv")
-
+  writePatchFeat(path+pren+s,1,64,model1,"patch_test_nl.csv")
+  '''
+  '''
+  pretest = "test_nodule_img_patch/test_patch"
+  for i in range(136,154):
+    s = str(i).zfill(3)
+    writePatchFeat(path+pretest+s,1,64,model1,"process_patch_test"+s+".csv")
+  '''
 if __name__ == '__main__':
   main()

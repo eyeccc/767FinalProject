@@ -24,6 +24,7 @@ from keras.layers import Dense, Activation
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+from keras.optimizers import SGD
 # path for images 
 # /Users/waster/Downloads/All247images
 # /Users/waster/Downloads/bone_shadow_eliminated_JSRT_2013-04-19
@@ -46,7 +47,7 @@ def readimg(prestr, idx, rx, ry): # for binary image
 
   B = Image.fromarray(A)
 #B = imresize(B,[256,256])
-  B = B.resize((256,256), Image.ANTIALIAS)
+  B = B.resize((20,20), Image.ANTIALIAS)
   B = B.crop((rx,ry,rx+224,ry+224))
   #B = np.asarray(B)
   #B = np.repeat(B[:,:,np.newaxis],3,axis=2)
@@ -66,17 +67,17 @@ def readpngnr(prestr, idx):
   filename = prestr
   name = filename + str(idx).zfill(3) + ".png"
   A = Image.open(name)
-  B = A.resize((20,20), Image.ANTIALIAS) # resize to very small patch
+  B = A.resize((50,50), Image.ANTIALIAS) # resize to very small patch
 #  B = imresize(A,[224,224])
 
   B = np.asarray(B)
   #B = B.flatten()
-  #B = np.reshape(B,(1,10,10))
+  #B = np.reshape(B,(1,20,20))
   B = np.repeat(B[:,:,np.newaxis],3,axis=2)
   B = np.divide(B, 3.)
-  B = np.reshape(B,(3,20,20))
-  B = np.expand_dims(B, axis=0)
-  B = preprocess_input(B)
+  B = np.reshape(B,(3,50,50))
+  #B = np.expand_dims(B, axis=0)
+  #B = preprocess_input(B)
   return B
 
 def get_activations(model, layer_idx, X_batch):
@@ -154,8 +155,10 @@ def main():
     test_y.append(0)
   dimfeat = len(data[0])
   data = np.asarray(data)
+  #data = data.reshape((1,-1))
   labels = np.asarray(labels)
   test_data = np.asarray(test_data)
+  #test_data = test_data.reshape((1,-1))
   test_y = np.asarray(test_y)
 
   l = labels.reshape((-1, 1))
@@ -163,7 +166,7 @@ def main():
   
   #dimfeat = len(P1[0])
   model = Sequential()
-  model.add(Convolution2D(10, 3, 3, input_shape=(3, 20, 20)))
+  model.add(Convolution2D(10, 3, 3,input_shape=data.shape[1:]))
   model.add(Activation('relu'))
   #model.add(MaxPooling2D(pool_size=(2, 2)))
   #model.add(GlobalAveragePooling2D())
@@ -175,18 +178,21 @@ def main():
   #model.add(Dropout(0.5))
   model.add(Dense(1))
   model.add(Activation('softmax'))
-  model.compile(optimizer='rmsprop',
+  sgd = SGD(lr=0.1, decay=1e-6, momentum=0.5)
+  model.compile(optimizer=sgd,
               loss='binary_crossentropy',
               metrics=['accuracy'])
 
   #l = labels.reshape((-1, 1))
   #model.fit(data, l, nb_epoch=100)
-  for j in range(0,100):
-    for i in range(0,len(data)):
-      model.fit(data[i], l[i], nb_epoch=1, batch_size=10)
+  #for j in range(0,100):
+    #for i in range(0,len(data)):
+  #print(data.shape)
+      #data = data.reshape((263,1,3,20,20))
+  model.fit(data.reshape((263,3,50,50)), l, nb_epoch=20, batch_size=263)
   num = 0.
   for i in range(0,len(test_y)):
-    score = model.evaluate(test_data[i], test_y[i], batch_size=10)
+    score = model.evaluate(test_data[i].reshape((1,3,50,50)), test_y[i], batch_size=263)
     print("score")
     print(score[1])
     num = num + score[1]
