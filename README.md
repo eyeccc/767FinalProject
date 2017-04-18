@@ -1,29 +1,27 @@
-# 767FinalProject
+# Lung Nodule Detection in X-ray Image
 CS767 Final Project
 
 ## Dataset for Lung Nodule
-1. X-ray: http://www.jsrt.or.jp/jsrt-db/eng.php
-2. CT: http://www.via.cornell.edu/databases/crpf.html
+JSRT: http://www.jsrt.or.jp/jsrt-db/eng.php
+
+## Aproach
+1. Using simple image processing methods (HoG)
+2. Using deep learning with pre-trained models
 
 ## Dependency (Deep Learning Python Library)
 
-1. http://deeplearning.net/tutorial/lenet.html
-2. http://deeplearning.net/software/theano/
-3. https://github.com/fchollet/keras
-4. https://github.com/fchollet/deep-learning-models
+1. http://deeplearning.net/software/theano/
+2. https://github.com/fchollet/keras
+3. https://github.com/fchollet/deep-learning-models
 
-#### might not be used
-1. https://code.google.com/archive/p/neurolab/
-2. https://www.tensorflow.org/
-3. https://github.com/kitofans/caffe-theano-conversion
-
-## Model I use
+## Pre-trained Model
 ResNet: http://ethereon.github.io/netscope/#/gist/db945b393d40bfa26006
 
 (Get from: https://github.com/fchollet/deep-learning-models/blob/master/resnet50.py)
 
-### layers
-pool1, res2c, res3d, res4f, and pool5
+### Test layers for deep learning method
+1. last average relu layer
+2. Only the first 2 layers
 
 ## Issue I faced
 1. How to get hidden layer feature: https://github.com/fchollet/keras/issues/3166
@@ -60,5 +58,3 @@ The doctor will look at the X-ray to evaluate the size and shape of the nodule, 
 ## PPT
 https://docs.google.com/presentation/d/1sBLeiPUyPBZl__jUt5zuR4w3zGU0fA9u9FBkoZ-kAys/edit#slide=id.gcb9a0b074_1_0
 
-## Disclaimer
-I used my friends laptop for part of the implementation and forgot to change git config file. Thus, it will show other contributor, but it's actually me...
