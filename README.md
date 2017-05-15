@@ -55,6 +55,6 @@ The doctor will look at the X-ray to evaluate the size and shape of the nodule, 
 2. http://my.clevelandclinic.org/health/diseases_conditions/hic_Pulmonary_Nodules
 3. http://cis-linux1.temple.edu/~wangp/5603-AI/Project/2016S/Transfer_ImageNet.pdf
 
-## PPT
+## Slides
 https://docs.google.com/presentation/d/1sBLeiPUyPBZl__jUt5zuR4w3zGU0fA9u9FBkoZ-kAys/edit#slide=id.gcb9a0b074_1_0
 
